@@ -24,8 +24,8 @@ class GenerateStoryCubit extends Cubit<GenerateStoryState> {
           '${int.parse(user.kidsAge ?? '3') - 1} - ${int.parse(user.kidsAge ?? '3') + 1}';
 
       final data = await generateStoryRepository.generateStory(promptDetails);
-      firebaseDBRepository.addStories(data);
-      emit(GenerateStoryLoaded(story: data));
+      final story = await firebaseDBRepository.addStories(data);
+      emit(GenerateStoryLoaded(story: story));
     } catch (e) {
       if (e == SocketException) {
         emit(GenerateStoryNoInternetError());

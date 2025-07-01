@@ -43,7 +43,7 @@ class FirebaseDBRepositoryImpl implements FirebaseDBRepository {
   }
 
   @override
-  Future<void> addStories(AiStory storyDetails) async {
+  Future<AiStory> addStories(AiStory storyDetails) async {
     final userId = firebaseAuth.currentUser!.uid;
     final Map<String, dynamic> storyData = {
       'username': firebaseAuth.currentUser!.displayName,
@@ -62,7 +62,9 @@ class FirebaseDBRepositoryImpl implements FirebaseDBRepository {
       await firestoreDB.collection('user_stories').doc(doc.id).update({
         'id': doc.id,
       });
+      storyDetails.id = doc.id;
     });
+    return storyDetails;
   }
 
   @override
@@ -284,7 +286,7 @@ abstract class FirebaseDBRepository {
   Future<void> addUserProfile(Map<String, dynamic> userDetails);
   Future<void> updateUserProfile(Map<String, dynamic> userDetails);
   Future<UserProfile> getUserProfile();
-  Future<void> addStories(AiStory storyDetails);
+  Future<AiStory> addStories(AiStory storyDetails);
   Future<List<AiStory>> getStories(String character, AiStory? lastDoc);
   Future<List<AiStory>> getEditorStories();
   Future<List<AiStory>> getMyStories(AiStory? lastDoc);

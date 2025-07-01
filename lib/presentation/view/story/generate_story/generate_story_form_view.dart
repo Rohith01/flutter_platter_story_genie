@@ -55,7 +55,7 @@ class _GenerateStoryFormViewState extends State<GenerateStoryFormView> {
           );
         }
       },
-      builder: (context, state) {
+      builder: (context, creditState) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
@@ -67,7 +67,6 @@ class _GenerateStoryFormViewState extends State<GenerateStoryFormView> {
                 GoRouter.of(context).pop();
               },
             ),
-
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 20),
@@ -201,10 +200,11 @@ class _GenerateStoryFormViewState extends State<GenerateStoryFormView> {
                         ),
                       ),
                     ),
-
                     SizedBox(height: 20.h),
                     RoundedButton(
-                      isLoading: state is GenerateStoryLoading,
+                      isLoading:
+                          state is GenerateStoryLoading ||
+                          creditState is ManageCreditsLoading,
                       title: 'Generate Story',
                       width: 200.w,
                       titleTextStyle: Theme.of(
