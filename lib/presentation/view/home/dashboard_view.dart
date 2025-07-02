@@ -369,10 +369,11 @@ class _DashboardViewState extends State<DashboardView> {
                                             alignment: Alignment.topCenter,
                                             child: Text(
                                               'Craft your own story with AI',
-                                              style:
-                                                  Theme.of(
-                                                    context,
-                                                  ).textTheme.bodyLarge,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodyLarge!.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                           Align(
