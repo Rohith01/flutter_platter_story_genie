@@ -44,8 +44,8 @@
 <div align="center">
   <img src="https://texttofloss.com/wp-content/uploads/2021/01/Google-Play-Store-Button.png" alt="Home Screen" width="300"  />
   </br>
-  [Download app from playstore] (https://play.google.com/apps/internaltest/4701103157126510506) - Internal Testing Link
-  [Download apk from medifire] (https://www.mediafire.com/file/354plodn4ft4jud/app-release.apk/file)
+  [Download app from playstore] (https://play.google.com/apps/testing/com.flutterplatter.storygenie) - Closed Testing Link - email me for invite
+  [Download apk from medifire] (https://www.mediafire.com/file/neu3agr0i56n0vc/storygenie-release.apk/file)
 </div>
 
 ---
