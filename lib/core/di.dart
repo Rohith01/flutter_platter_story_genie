@@ -2,7 +2,7 @@ import 'package:algoliasearch/algoliasearch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -43,9 +43,6 @@ Future<void> setupDependencies() async {
   sl.registerLazySingleton<GenerateStoryRepository>(
     () => GenerateStoryRepositoryImpl(sl(), sl(), sl()),
   );
-
-  // Register services here
-  sl.registerLazySingleton<Dio>(() => Dio());
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(firebaseAuth: sl()),
   );
@@ -64,10 +61,13 @@ Future<void> setupDependencies() async {
     () => SearchStoriesRepositoryImpl(sl()),
   );
 
+  // Register services here
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
   sl.registerLazySingleton<FirebaseAnalytics>(() => FirebaseAnalytics.instance);
   sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  sl.registerLazySingleton<FirebaseAI>(() => FirebaseAI.googleAI());
+
   sl.registerLazySingleton<DeviceInfoPlugin>(() => DeviceInfoPlugin());
   sl.registerLazySingleton<FirebaseAnalyticsObserver>(
     () => FirebaseAnalyticsObserver(analytics: sl()),

@@ -67,8 +67,7 @@ create
 #Change following values
 1. Package Name
 2. Google Signin and Captcha Keys - kWebRecaptchaSiteKey and kGoogleSigninClientId at lib/core/constants.dart
-3. Gemini API Key at lib/core/constants.dart
-2. Algolia AppId and API Keys - kAlgoliaAppId and kAlgoliApiKey at lib/core/constants.dart. Get it from [https://www.algolia.com/]
+3. Algolia AppId and API Keys - kAlgoliaAppId and kAlgoliApiKey at lib/core/constants.dart. Get it from [https://www.algolia.com/]
 
 
 # Get dependencies

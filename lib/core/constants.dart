@@ -41,11 +41,10 @@ List<String> greetings = [
   'Have a cool ',
 ];
 
-//TODO:: Replace API keys
+// TODO:: Replace API keys
 const kWebRecaptchaSiteKey = 'please replace with your recaptcha site key';
 const kGoogleSigninClientId =
     'please replace with your google signin client id';
-const kGeminiApiKey = 'please replace with your gemini api key';
 const kAlgoliaAppId = 'please replace with your Algolia app id';
 const kAlgoliApiKey = 'please replace with your Algolia API key';
 
