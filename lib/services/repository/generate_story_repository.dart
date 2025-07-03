@@ -2,18 +2,21 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dio/dio.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:story_genie/core/constants.dart';
 import 'package:story_genie/core/featured_image_picker.dart';
-import 'package:story_genie/services/models/gemini_ai_response.dart';
 import 'package:story_genie/services/models/story_model.dart';
 
 class GenerateStoryRepositoryImpl implements GenerateStoryRepository {
-  GenerateStoryRepositoryImpl(this.dio, this.firebaseAuth, this.connectivity);
-  final Dio dio;
+  GenerateStoryRepositoryImpl(
+    this.firebaseAuth,
+    this.connectivity,
+    this.firebaseAI,
+  );
   final FirebaseAuth firebaseAuth;
   final Connectivity connectivity;
+  final FirebaseAI firebaseAI;
 
   @override
   Future<AiStory> generateStory(Map<String, String?> storyFormData) async {
@@ -30,46 +33,36 @@ class GenerateStoryRepositoryImpl implements GenerateStoryRepository {
               ? 'kindness'
               : storyFormData['additionalInfo']!;
 
-      final response = await dio.post(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+      final prompt = [
+        Content.text(
+          'I need a short story for kids aged $age. The story should be around 300-500 words and feature a friendly ${character.toLowerCase() == 'animal' ? kPromptAnimalCharacter[Random().nextInt(8)] : character} character who learns a valuable lesson about ${kPromptMoralTheme[Random().nextInt(5)]}. The story should subtly weave in elements of Indian culture. The tone should be whimsical and positive, with a clear beginning, middle, and end. The story should be in $language. Also add elements such as $additionalInfo. In addition to the story, please provide a featured image in cartoon style which looks attractive to kids, that would perfectly represent the story and cartoon style which looks attractive to kids. Your output should be in text format with entire story in between <story> tag, title for the story in <title> tag and image in between <image> tag.',
+        ),
+      ];
 
-        queryParameters: {'key': kGeminiApiKey},
-        options: Options(contentType: Headers.jsonContentType),
-        data: {
-          'contents': [
-            {
-              'parts': [
-                {
-                  'text':
-                      'I need a short story for kids aged $age. The story should be around 300-500 words and feature a friendly ${character.toLowerCase() == 'animal' ? kPromptAnimalCharacter[Random().nextInt(8)] : character} character who learns a valuable lesson about ${kPromptMoralTheme[Random().nextInt(5)]}. The story should subtly weave in elements of Indian culture. The tone should be whimsical and positive, with a clear beginning, middle, and end. The story should be in $language. Also add elements such as $additionalInfo. In addition to the story, please provide a featured image in cartoon style which looks attractive to kids, that would perfectly represent the story and cartoon style which looks attractive to kids. Your output should be in text format with entire story in between <story> tag, title for the story in <title> tag and image in between <image> tag.',
-                },
-              ],
-            },
-          ],
-        },
-      );
+      final response = await firebaseAI
+          .generativeModel(model: 'gemini-2.0-flash')
+          .generateContent(prompt);
+
       final aiStoryBlock =
-          GeminiAiResponse.fromJson(
-            response.data,
-          ).candidates.first.content.parts.first.text;
+          response.candidates.first.content.parts.first as TextPart;
 
       final story = AiStory(
         title: getTextValue(
           startTag: '<title>',
           endTag: '</title>',
-          aiStoryBlock: aiStoryBlock,
+          aiStoryBlock: aiStoryBlock.text,
         ),
         story: getTextValue(
           startTag: '<story>',
           endTag: '</story>',
-          aiStoryBlock: aiStoryBlock,
+          aiStoryBlock: aiStoryBlock.text,
         ),
         character: character,
         featureImage: pickFeaturedImage(character),
         featuredImagePrompt: getTextValue(
           startTag: '<image>',
           endTag: '</image>',
-          aiStoryBlock: aiStoryBlock,
+          aiStoryBlock: aiStoryBlock.text,
         ),
         userName: firebaseAuth.currentUser!.displayName ?? 'Anonymous',
         isSaved: false,
